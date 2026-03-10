@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lagyo — Deliver Smarter</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--red:#DC143C;--red-dark:#A50E2D;--red-bright:#FF1A47;--red-glow:rgba(220,20,60,0.25);--black:#0A0A0B;--dark:#111114;--card:#16161A;--card2:#1C1C21;--border:rgba(220,20,60,0.18);--text:#F0EEF0;--muted:#8A8A9A;--white:#FFFFFF;--green:#22c55e;--amber:#f59e0b;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--text);font-family:'Outfit',sans-serif;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4;}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:70px;background:rgba(10,10,11,0.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Bebas Neue',cursive;font-size:2rem;letter-spacing:4px;color:var(--white);display:flex;align-items:center;gap:8px;cursor:pointer;}
+.logo span{color:var(--red);}
+.logo-dot{width:8px;height:8px;background:var(--red);border-radius:50%;animation:pulse 1.8s infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 var(--red-glow)}50%{box-shadow:0 0 0 8px transparent}}
+.nav-links{display:flex;gap:2rem;align-items:center;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500;transition:.2s;cursor:pointer;}
+.nav-links a:hover{color:var(--white);}
+.nav-right{display:flex;gap:.7rem;align-items:center;}
+.nav-btn{padding:.48rem 1.2rem;border-radius:6px;font-weight:600;font-size:.88rem;cursor:pointer;border:none;transition:.2s;font-family:'Outfit',sans-serif;}
+.nav-btn.outline{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,0.15);}
+.nav-btn.outline:hover{border-color:var(--red);color:var(--red);}
+.nav-btn.solid{background:var(--red);color:#fff;}
+.nav-btn.solid:hover{background:var(--red-bright);transform:translateY(-1px);}
+/* ROLE BAR */
+.role-bar{position:fixed;top:70px;left:0;right:0;z-index:99;background:var(--dark);border-bottom:1px solid var(--border);display:flex;justify-content:center;}
+.role-tab{padding:.7rem 2.5rem;font-size:.85rem;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--muted);letter-spacing:1px;text-transform:uppercase;transition:.2s;border-bottom:2px solid transparent;font-family:'Outfit',sans-serif;}
+.role-tab.active{color:var(--red);border-bottom-color:var(--red);}
+.role-tab:hover{color:var(--text);}
+/* PAGES */
+.page{display:none;}.page.active{display:block;}
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:0 5%;padding-top:110px;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 80% 50%,rgba(220,20,60,.12) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 10% 80%,rgba(220,20,60,.07) 0%,transparent 60%);}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(220,20,60,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(220,20,60,.04) 1px,transparent 1px);background-size:60px 60px;}
+.hero-content{position:relative;z-index:1;max-width:680px;}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(220,20,60,.12);border:1px solid var(--border);padding:.4rem 1rem;border-radius:100px;font-size:.8rem;font-weight:600;color:var(--red);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1.5rem;}
+.hero h1{font-family:'Bebas Neue',cursive;font-size:clamp(4rem,9vw,8rem);line-height:.95;letter-spacing:2px;margin-bottom:1.5rem;}
+.hero h1 em{color:var(--red);font-style:normal;}
+.hero p{font-size:1.15rem;color:var(--muted);line-height:1.7;max-width:520px;margin-bottom:2.5rem;}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;}
+.btn-primary{background:var(--red);color:#fff;padding:.85rem 2rem;border-radius:8px;font-weight:700;font-size:1rem;cursor:pointer;border:none;transition:.2s;display:flex;align-items:center;gap:.5rem;font-family:'Outfit',sans-serif;}
+.btn-primary:hover{background:var(--red-bright);transform:translateY(-2px);box-shadow:0 8px 30px rgba(220,20,60,.35);}
+.btn-outline2{background:transparent;color:var(--text);padding:.85rem 2rem;border-radius:8px;font-weight:600;font-size:1rem;cursor:pointer;border:1px solid rgba(255,255,255,.15);transition:.2s;font-family:'Outfit',sans-serif;}
+.btn-outline2:hover{border-color:var(--red);color:var(--red);}
+.hero-stats{position:absolute;right:5%;bottom:12%;display:flex;flex-direction:column;gap:1.5rem;z-index:1;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem 1.5rem;text-align:right;}
+.stat-num{font-family:'Bebas Neue',cursive;font-size:2.2rem;color:var(--red);}
+.stat-label{font-size:.8rem;color:var(--muted);}
+/* SECTIONS */
+section{position:relative;z-index:1;}
+.section-pad{padding:7rem 5%;}
+.section-label{font-size:.75rem;letter-spacing:3px;text-transform:uppercase;color:var(--red);font-weight:600;margin-bottom:.8rem;display:flex;align-items:center;gap:.6rem;}
+.section-label::before{content:'';width:24px;height:2px;background:var(--red);}
+.section-title{font-family:'Bebas Neue',cursive;font-size:clamp(2.5rem,5vw,4rem);letter-spacing:2px;margin-bottom:1rem;}
+.section-sub{color:var(--muted);font-size:1rem;max-width:540px;line-height:1.7;}
+/* FEATURES */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5px;margin-top:4rem;border:1.5px solid var(--border);border-radius:16px;overflow:hidden;}
+.feat-card{background:var(--card);padding:2.5rem;transition:.3s;cursor:default;position:relative;overflow:hidden;}
+.feat-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(220,20,60,.05),transparent);opacity:0;transition:.3s;}
+.feat-card:hover::after{opacity:1;}.feat-card:hover{background:var(--card2);}
+.feat-icon{width:52px;height:52px;border-radius:12px;background:rgba(220,20,60,.12);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.5rem;}
+.feat-card h3{font-weight:700;font-size:1.1rem;margin-bottom:.6rem;}
+.feat-card p{color:var(--muted);font-size:.9rem;line-height:1.6;}
+/* HOW IT WORKS */
+.how-bg{background:var(--dark);}
+.steps{display:flex;gap:0;margin-top:4rem;flex-wrap:wrap;}
+.step{flex:1;min-width:180px;padding:2rem 1.5rem;position:relative;text-align:center;}
+.step:not(:last-child)::after{content:'→';position:absolute;right:-12px;top:2.5rem;color:var(--red);font-size:1.3rem;}
+.step-num{width:52px;height:52px;border-radius:50%;background:var(--red);color:#fff;font-family:'Bebas Neue',cursive;font-size:1.6rem;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;}
+.step h4{font-size:.95rem;font-weight:600;}
+/* FORMS */
+.send-section{background:var(--black);}
+.form-wrapper{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:3rem;margin-top:3rem;max-width:860px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.2rem;}
+.form-group{display:flex;flex-direction:column;gap:.5rem;}
+.form-group label{font-size:.82rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.form-group input,.form-group select{background:var(--dark);border:1px solid rgba(255,255,255,.08);color:var(--text);padding:.85rem 1rem;border-radius:8px;font-family:'Outfit',sans-serif;font-size:.95rem;outline:none;transition:.2s;}
+.form-group input:focus,.form-group select:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(220,20,60,.12);}
+.form-group select option{background:var(--dark);}
+.size-btns{display:flex;gap:.6rem;}
+.size-btn{flex:1;padding:.7rem;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:var(--dark);color:var(--muted);cursor:pointer;font-size:.85rem;font-weight:600;transition:.2s;font-family:'Outfit',sans-serif;}
+.size-btn.active{background:rgba(220,20,60,.15);border-color:var(--red);color:var(--red);}
+.size-btn:hover{border-color:var(--red);color:var(--red);}
+.find-btn{width:100%;padding:1.1rem;border-radius:10px;background:var(--red);color:#fff;font-weight:700;font-size:1rem;cursor:pointer;border:none;transition:.2s;display:flex;align-items:center;justify-content:center;gap:.6rem;font-family:'Outfit',sans-serif;letter-spacing:.5px;margin-top:.5rem;}
+.find-btn:hover{background:var(--red-bright);box-shadow:0 8px 30px rgba(220,20,60,.4);transform:translateY(-1px);}
+/* LOADING */
+.loading-overlay{display:none;position:fixed;inset:0;z-index:1000;background:rgba(10,10,11,.93);backdrop-filter:blur(12px);align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;}
+.loading-overlay.show{display:flex;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.loading-logo{font-family:'Bebas Neue',cursive;font-size:3rem;letter-spacing:6px;}
+.loading-logo span{color:var(--red);}
+.loading-bar-wrap{width:300px;height:4px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;}
+.loading-bar{height:100%;background:var(--red);border-radius:4px;width:0;transition:width .4s ease;}
+.loading-status{font-size:.9rem;color:var(--muted);font-family:'DM Mono',monospace;}
+.loading-steps-list{display:flex;flex-direction:column;gap:.4rem;}
+.loading-step{font-size:.82rem;color:var(--muted);font-family:'DM Mono',monospace;opacity:.4;transition:.4s;}
+.loading-step.done{color:#4ade80;opacity:1;}.loading-step.active{color:var(--red);opacity:1;}
+/* RESULTS */
+.results-section{display:none;background:var(--dark);border-top:1px solid var(--border);}
+.results-section.show{display:block;animation:slideUp .5s ease;}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2.5rem;flex-wrap:wrap;gap:1rem;}
+.ai-badge{background:rgba(220,20,60,.12);border:1px solid var(--border);color:var(--red);padding:.4rem .9rem;border-radius:100px;font-size:.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;display:flex;align-items:center;gap:.4rem;}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.2rem;}
+.result-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.8rem;transition:.2s;position:relative;overflow:hidden;cursor:pointer;}
+.result-card:hover{border-color:var(--red);transform:translateY(-3px);box-shadow:0 12px 40px rgba(220,20,60,.15);}
+.result-card.recommended{border-color:var(--red);}
+.rec-badge{position:absolute;top:1rem;right:1rem;background:var(--red);color:#fff;font-size:.7rem;font-weight:700;padding:.2rem .6rem;border-radius:4px;letter-spacing:1px;text-transform:uppercase;}
+.result-traveler{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;}
+.avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--red-dark),var(--red));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;color:#fff;flex-shrink:0;}
+.traveler-info h4{font-weight:700;font-size:1rem;}
+.traveler-info .stars{color:#FFB800;font-size:.9rem;}
+.traveler-info .trips{font-size:.78rem;color:var(--muted);}
+.result-route{font-size:.85rem;color:var(--muted);margin-bottom:1rem;}
+.result-meta{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.2rem;}
+.meta-item{display:flex;flex-direction:column;gap:.2rem;}
+.meta-label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.meta-value{font-size:1rem;font-weight:700;}
+.meta-value.price{color:var(--red);font-size:1.3rem;}
+.select-btn{width:100%;padding:.75rem;border-radius:8px;background:rgba(220,20,60,.1);color:var(--red);border:1px solid var(--border);font-weight:700;font-size:.9rem;cursor:pointer;transition:.2s;font-family:'Outfit',sans-serif;}
+.select-btn:hover{background:var(--red);color:#fff;border-color:var(--red);}
+.map-preview{margin-top:2.5rem;background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;height:280px;position:relative;}
+.map-canvas{width:100%;height:100%;position:absolute;}
+.map-label{position:absolute;bottom:1rem;left:1rem;background:rgba(10,10,11,.9);border:1px solid var(--border);padding:.5rem 1rem;border-radius:8px;font-size:.8rem;font-family:'DM Mono',monospace;color:var(--muted);}
+/* ── TRAVELLER PAGE ── */
+.traveller-hero{min-height:65vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:0 5%;padding-top:120px;padding-bottom:4rem;}
+.traveller-hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 50% 80% at 20% 50%,rgba(220,20,60,.14) 0%,transparent 65%),radial-gradient(ellipse 40% 40% at 85% 20%,rgba(220,20,60,.08) 0%,transparent 60%);}
+.traveller-split{display:grid;grid-template-columns:1fr 1.1fr;gap:4rem;align-items:start;position:relative;z-index:1;width:100%;}
+.traveller-perks{display:flex;flex-direction:column;gap:1rem;margin-top:2rem;}
+.perk{display:flex;align-items:flex-start;gap:1rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem;}
+.perk-icon{font-size:1.4rem;flex-shrink:0;}
+.perk h4{font-weight:700;font-size:.95rem;margin-bottom:.2rem;}
+.perk p{font-size:.82rem;color:var(--muted);line-height:1.5;}
+/* WIZARD */
+.wizard-wrap{background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;}
+.wizard-progress{background:var(--dark);padding:1.5rem 2rem;border-bottom:1px solid var(--border);}
+.progress-steps{display:flex;align-items:center;}
+.prog-step{display:flex;align-items:center;gap:.4rem;flex:1;}
+.prog-step:not(:last-child)::after{content:'';flex:1;height:2px;background:rgba(255,255,255,.08);margin:0 .3rem;}
+.prog-dot{width:30px;height:30px;border-radius:50%;border:2px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--muted);transition:.3s;flex-shrink:0;}
+.prog-dot.active{border-color:var(--red);color:var(--red);background:rgba(220,20,60,.1);}
+.prog-dot.done{border-color:var(--green);background:rgba(34,197,94,.12);color:var(--green);}
+.prog-label{font-size:.68rem;color:var(--muted);font-weight:600;white-space:nowrap;}
+.prog-step.active .prog-label{color:var(--text);}
+.wizard-body{padding:2rem;}
+.wiz-step{display:none;}.wiz-step.active{display:block;animation:fadeIn .3s ease;}
+.wiz-step h3{font-family:'Bebas Neue',cursive;font-size:1.8rem;letter-spacing:1.5px;margin-bottom:.3rem;}
+.wiz-sub{color:var(--muted);font-size:.88rem;margin-bottom:1.8rem;line-height:1.5;}
+/* DOC UPLOAD */
+.doc-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1.2rem;}
+.doc-upload{border:2px dashed rgba(255,255,255,.1);border-radius:12px;padding:1.5rem .8rem;text-align:center;cursor:pointer;transition:.3s;position:relative;background:var(--dark);}
+.doc-upload:hover{border-color:var(--red);background:rgba(220,20,60,.04);}
+.doc-upload.uploaded{border-color:var(--green);border-style:solid;background:rgba(34,197,94,.06);}
+.doc-upload input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.doc-icon{font-size:1.8rem;margin-bottom:.4rem;}
+.doc-name{font-size:.82rem;font-weight:700;margin-bottom:.2rem;}
+.doc-hint{font-size:.72rem;color:var(--muted);}
+.doc-status{font-size:.75rem;margin-top:.3rem;font-weight:600;color:var(--muted);}
+.doc-upload.uploaded .doc-status{color:var(--green);}
+/* ROUTE */
+.route-builder{background:var(--dark);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:1.2rem;}
+.route-builder h4{font-weight:700;margin-bottom:.8rem;font-size:.9rem;}
+.route-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem;}
+.route-row.triple{grid-template-columns:1fr 1fr 1fr;}
+/* PRICING */
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1.2rem;}
+.price-card{background:var(--dark);border:1px solid var(--border);border-radius:12px;padding:1.2rem;}
+.price-card label{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:.5rem;}
+.price-input-wrap{display:flex;align-items:center;gap:.4rem;}
+.currency{font-size:1.1rem;font-weight:700;color:var(--red);}
+.price-input-wrap input{background:transparent;border:none;color:var(--text);font-size:1.6rem;font-weight:700;font-family:'Bebas Neue',cursive;letter-spacing:1px;outline:none;width:100%;}
+.price-input-wrap input::placeholder{color:rgba(255,255,255,.2);}
+.ai-suggest-price{display:flex;align-items:center;gap:.4rem;font-size:.75rem;color:var(--red);margin-top:.4rem;cursor:pointer;background:none;border:none;font-family:'Outfit',sans-serif;font-weight:600;padding:0;}
+.ai-suggest-price:hover{text-decoration:underline;}
+/* VERIFY PENDING */
+.verification-pending{text-align:center;padding:2.5rem 1.5rem;}
+.verify-icon{font-size:3.5rem;margin-bottom:1rem;}
+.verify-steps{display:flex;flex-direction:column;gap:.7rem;margin:1.5rem auto;max-width:380px;text-align:left;}
+.verify-step{display:flex;align-items:center;gap:.8rem;background:var(--dark);border:1px solid var(--border);border-radius:10px;padding:.8rem 1rem;font-size:.85rem;}
+.verify-step .vstatus{margin-left:auto;font-size:.76rem;font-weight:700;}
+.vstatus.done{color:var(--green);}.vstatus.pending{color:var(--amber);}.vstatus.waiting{color:var(--muted);}
+/* DASHBOARD */
+.dashboard{padding:2rem 5%;padding-top:110px;display:none;}
+.dashboard.show{display:block;}
+.dash-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2.5rem;flex-wrap:wrap;gap:1rem;}
+.dash-user{display:flex;align-items:center;gap:1rem;}
+.dash-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--red-dark),var(--red));display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:700;color:#fff;}
+.dash-info h2{font-family:'Bebas Neue',cursive;font-size:1.6rem;letter-spacing:2px;}
+.dash-info p{font-size:.85rem;color:var(--muted);}
+.verified-tag{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);color:var(--green);padding:.2rem .6rem;border-radius:100px;font-size:.7rem;font-weight:700;letter-spacing:1px;}
+.dash-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:2rem;}
+.dash-stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.3rem;}
+.dash-stat-num{font-family:'Bebas Neue',cursive;font-size:1.9rem;color:var(--red);}
+.dash-stat-label{font-size:.78rem;color:var(--muted);margin-top:.2rem;}
+.dash-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:1.5rem;}
+.dash-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.8rem;}
+.dash-card-title{font-weight:700;font-size:.95rem;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:space-between;}
+.edit-btn{font-size:.76rem;color:var(--red);cursor:pointer;background:none;border:none;font-family:'Outfit',sans-serif;font-weight:600;}
+.route-display{background:var(--dark);border:1px solid var(--border);border-radius:10px;padding:.9rem 1.1rem;margin-bottom:.8rem;}
+.from-to{display:flex;align-items:center;gap:.5rem;font-size:.88rem;flex-wrap:wrap;}
+.route-arrow{color:var(--red);}
+.route-date{font-size:.73rem;color:var(--muted);margin-top:.3rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+.route-price-tag{background:rgba(220,20,60,.12);color:var(--red);font-size:.8rem;font-weight:700;padding:.18rem .55rem;border-radius:6px;margin-left:auto;}
+.status-tag{display:inline-flex;align-items:center;gap:.3rem;font-size:.72rem;font-weight:700;padding:.2rem .6rem;border-radius:100px;}
+.status-tag.active{background:rgba(34,197,94,.12);color:var(--green);}
+.status-tag.pending{background:rgba(245,158,11,.12);color:var(--amber);}
+.status-tag.inactive{background:rgba(255,255,255,.06);color:var(--muted);}
+.incoming-list{display:flex;flex-direction:column;gap:.7rem;}
+.incoming-item{display:flex;align-items:center;gap:.7rem;background:var(--dark);border:1px solid var(--border);border-radius:10px;padding:.85rem .9rem;}
+.pkg-icon{font-size:1.2rem;flex-shrink:0;}
+.incoming-info h5{font-size:.85rem;font-weight:700;}
+.incoming-info p{font-size:.73rem;color:var(--muted);}
+.incoming-price{margin-left:auto;font-weight:700;color:var(--red);font-size:.92rem;flex-shrink:0;}
+.accept-btn{background:var(--red);color:#fff;border:none;padding:.32rem .75rem;border-radius:6px;font-size:.76rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:.2s;flex-shrink:0;}
+.accept-btn:hover{background:var(--red-bright);}
+/* WIZ NAV */
+.wiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;padding-top:1.2rem;border-top:1px solid var(--border);}
+.wiz-back{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,.1);padding:.6rem 1.3rem;border-radius:8px;font-weight:600;cursor:pointer;transition:.2s;font-family:'Outfit',sans-serif;}
+.wiz-back:hover{color:var(--text);}
+.wiz-next{background:var(--red);color:#fff;border:none;padding:.6rem 1.8rem;border-radius:8px;font-weight:700;cursor:pointer;transition:.2s;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:.5rem;}
+.wiz-next:hover{background:var(--red-bright);transform:translateY(-1px);}
+/* TOGGLE */
+.toggle-wrap{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem;}
+.toggle{width:44px;height:24px;background:rgba(255,255,255,.08);border-radius:100px;cursor:pointer;position:relative;transition:.3s;border:none;flex-shrink:0;}
+.toggle.on{background:var(--red);}.toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:3px;left:3px;transition:.3s;}.toggle.on::after{left:23px;}
+.toggle-label{font-size:.88rem;font-weight:500;}
+/* CHAT */
+.chat-fab{position:fixed;bottom:2rem;right:2rem;z-index:200;width:62px;height:62px;border-radius:50%;background:var(--red);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 8px 30px rgba(220,20,60,.5);transition:.3s;}
+.chat-fab:hover{transform:scale(1.1);}
+.chat-fab .notif{position:absolute;top:2px;right:2px;width:16px;height:16px;background:#ff4444;border-radius:50%;font-size:.6rem;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;border:2px solid var(--black);}
+.chat-window{position:fixed;bottom:6.5rem;right:2rem;z-index:200;width:380px;height:560px;background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;display:none;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.6);}
+.chat-window.open{display:flex;animation:slideUp .3s ease;}
+.chat-header{padding:1.1rem 1.4rem;background:var(--dark);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.chat-header-left{display:flex;align-items:center;gap:.8rem;}
+.chat-ai-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--red-dark),var(--red));display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.chat-ai-info h4{font-size:.92rem;font-weight:700;}
+.chat-ai-info p{font-size:.73rem;color:var(--muted);}
+.online-dot{width:7px;height:7px;background:#4ade80;border-radius:50%;display:inline-block;margin-right:3px;}
+.chat-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem;}
+.chat-messages{flex:1;overflow-y:auto;padding:1.1rem;display:flex;flex-direction:column;gap:.8rem;}
+.chat-messages::-webkit-scrollbar{width:4px;}.chat-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+.msg{max-width:82%;padding:.75rem 1rem;border-radius:14px;font-size:.87rem;line-height:1.55;}
+.msg.bot{background:var(--dark);border:1px solid var(--border);color:var(--text);align-self:flex-start;border-radius:4px 14px 14px 14px;}
+.msg.user{background:var(--red);color:#fff;align-self:flex-end;border-radius:14px 4px 14px 14px;}
+.msg.typing{display:flex;gap:.4rem;align-items:center;padding:.85rem 1rem;}
+.typing-dot{width:7px;height:7px;background:var(--muted);border-radius:50%;animation:bounce 1s ease infinite;}
+.typing-dot:nth-child(2){animation-delay:.15s}.typing-dot:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+.chat-input-area{padding:.9rem 1.1rem;border-top:1px solid var(--border);display:flex;gap:.5rem;}
+.chat-input{flex:1;background:var(--dark);border:1px solid rgba(255,255,255,.08);color:var(--text);padding:.65rem .9rem;border-radius:10px;font-family:'Outfit',sans-serif;font-size:.87rem;outline:none;transition:.2s;}
+.chat-input:focus{border-color:var(--red);}
+.chat-send{width:40px;height:40px;border-radius:10px;background:var(--red);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.95rem;transition:.2s;flex-shrink:0;}
+.chat-send:hover{background:var(--red-bright);}
+.chat-suggestions{display:flex;gap:.4rem;padding:.4rem 1.1rem;flex-wrap:wrap;}
+.sugg-chip{background:rgba(220,20,60,.1);border:1px solid var(--border);color:var(--muted);padding:.28rem .65rem;border-radius:100px;font-size:.72rem;cursor:pointer;transition:.2s;}
+.sugg-chip:hover{border-color:var(--red);color:var(--red);}
+/* FOOTER */
+footer{background:var(--dark);border-top:1px solid var(--border);padding:3rem 5%;text-align:center;color:var(--muted);font-size:.85rem;}
+footer .f-logo{font-family:'Bebas Neue',cursive;font-size:2rem;letter-spacing:4px;color:var(--white);}
+footer .f-logo span{color:var(--red);}
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(30px);transition:.6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+/* TOAST */
+.toast{position:fixed;bottom:7rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card2);border:1px solid var(--green);color:var(--green);padding:.75rem 1.8rem;border-radius:100px;font-size:.86rem;font-weight:700;z-index:500;opacity:0;transition:.4s;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+/* RESPONSIVE */
+@media(max-width:900px){.traveller-split{grid-template-columns:1fr;}.dash-grid{grid-template-columns:1fr;}}
+@media(max-width:768px){.hero-stats{display:none;}.form-grid,.doc-grid,.pricing-grid,.route-row,.route-row.triple{grid-template-columns:1fr;}.chat-window{width:calc(100vw - 2rem);right:1rem;}.steps{gap:1rem;}.step:not(:last-child)::after{display:none;}.nav-links{display:none;}.prog-label{display:none;}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo" onclick="showSenderPage()">LAG<span>YO</span><div class="logo-dot"></div></div>
+  <div class="nav-links">
+    <a onclick="showSenderPage()">For Senders</a>
+    <a onclick="showTravellerPage()">For Travellers</a>
+    <a onclick="showSenderPage();setTimeout(()=>document.getElementById('features').scrollIntoView({behavior:'smooth'}),100)">Features</a>
+    <a onclick="showDashboard()">Dashboard</a>
+  </div>
+  <div class="nav-right">
+    <button class="nav-btn outline" onclick="openChat()">💬 AI Chat</button>
+    <button class="nav-btn solid" onclick="showTravellerPage()">Become a Traveller →</button>
+  </div>
+</nav>
+
+<!-- ROLE BAR -->
+<div class="role-bar">
+  <button class="role-tab active" id="tabSender" onclick="showSenderPage()">📦 I'm a Sender</button>
+  <button class="role-tab" id="tabTraveller" onclick="showTravellerPage()">🚗 I'm a Traveller</button>
+</div>
+
+<!-- ═══════ SENDER PAGE ═══════ -->
+<div class="page active" id="senderPage">
+  <section class="hero">
+    <div class="hero-bg"></div><div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-badge">🚀 AI-Powered Delivery Platform</div>
+      <h1>DELIVER<br><em>SMARTER</em><br>FASTER</h1>
+      <p>Lagyo connects senders with verified travellers heading your way. AI-optimized routes, real-time tracking, same-day delivery — powered by intelligence.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="document.getElementById('send').scrollIntoView({behavior:'smooth'})">📦 Send a Package</button>
+        <button class="btn-outline2" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">How It Works</button>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-card"><div class="stat-num">98%</div><div class="stat-label">On-Time Delivery</div></div>
+      <div class="stat-card"><div class="stat-num">12K+</div><div class="stat-label">Active Travellers</div></div>
+      <div class="stat-card"><div class="stat-num">4.9★</div><div class="stat-label">User Rating</div></div>
+    </div>
+  </section>
+
+  <section class="section-pad" id="features">
+    <div class="reveal">
+      <div class="section-label">What We Offer</div>
+      <div class="section-title">BUILT FOR SPEED<br>& TRUST</div>
+      <p class="section-sub">Every feature designed with one goal: getting your package there faster, cheaper, and safer.</p>
+    </div>
+    <div class="features-grid reveal">
+      <div class="feat-card"><div class="feat-icon">🧠</div><h3>AI Route Matching</h3><p>Advanced algorithms optimize routes in real-time, analyzing thousands of variables to find the fastest path.</p></div>
+      <div class="feat-card"><div class="feat-icon">⚡</div><h3>Same-Day Matching</h3><p>Connect with travellers already heading your destination today. No waiting — your package moves now.</p></div>
+      <div class="feat-card"><div class="feat-icon">🗺️</div><h3>Live Map Tracking</h3><p>Watch your package move in real-time through our interactive map. Know exactly where it is at all times.</p></div>
+      <div class="feat-card"><div class="feat-icon">💡</div><h3>AI Price Suggestion</h3><p>Our AI analyzes demand, distance, and market data to suggest a fair, competitive price — no overpaying.</p></div>
+      <div class="feat-card"><div class="feat-icon">💬</div><h3>In-App Chat</h3><p>Seamlessly communicate with your traveller. Coordinate handoffs, share updates, all inside the platform.</p></div>
+      <div class="feat-card"><div class="feat-icon">🛡️</div><h3>Rating & Safety</h3><p>Every traveller is verified with government ID. Our trust system ensures your package is in safe hands.</p></div>
+    </div>
+  </section>
+
+  <section class="section-pad how-bg" id="how">
+    <div class="reveal">
+      <div class="section-label">Process</div>
+      <div class="section-title">HOW LAGYO<br>WORKS</div>
+      <p class="section-sub">Five simple steps from package to delivery.</p>
+    </div>
+    <div class="steps reveal">
+      <div class="step"><div class="step-num">1</div><h4>Select Pickup & Destination</h4></div>
+      <div class="step"><div class="step-num">2</div><h4>AI Suggests Fair Price</h4></div>
+      <div class="step"><div class="step-num">3</div><h4>AI Matches a Traveller</h4></div>
+      <div class="step"><div class="step-num">4</div><h4>Chat & Coordinate</h4></div>
+      <div class="step"><div class="step-num">5</div><h4>Package Delivered ✓</h4></div>
+    </div>
+  </section>
+
+  <section class="section-pad send-section" id="send">
+    <div class="reveal">
+      <div class="section-label">Get Started</div>
+      <div class="section-title">SEND YOUR<br>PACKAGE</div>
+      <p class="section-sub">Fill in details and let our AI find the best route, price, and traveller for you.</p>
+    </div>
+    <div class="form-wrapper reveal">
+      <div class="form-grid">
+        <div class="form-group"><label>📍 Pickup Location</label><input type="text" id="pickup" placeholder="e.g. Thamel, Kathmandu"/></div>
+        <div class="form-group"><label>🎯 Destination</label><input type="text" id="destination" placeholder="e.g. Pokhara Bus Park"/></div>
+        <div class="form-group"><label>👤 Sender Name</label><input type="text" id="senderName" placeholder="Your full name"/></div>
+        <div class="form-group"><label>📞 Phone Number</label><input type="text" id="phone" placeholder="+977 98XXXXXXXX"/></div>
+        <div class="form-group"><label>📦 Package Description</label><input type="text" id="pkgDesc" placeholder="e.g. Documents, Electronics"/></div>
+        <div class="form-group"><label>⚖️ Weight</label>
+          <select id="weight"><option value="">Select weight</option><option value="under1">Under 1 kg</option><option value="1-3">1–3 kg</option><option value="3-7">3–7 kg</option><option value="7-15">7–15 kg</option><option value="over15">Over 15 kg</option></select>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:1.2rem">
+        <label>📐 Package Size</label>
+        <div class="size-btns">
+          <button class="size-btn active" onclick="selectSize(this,'small')">Small</button>
+          <button class="size-btn" onclick="selectSize(this,'medium')">Medium</button>
+          <button class="size-btn" onclick="selectSize(this,'large')">Large</button>
+          <button class="size-btn" onclick="selectSize(this,'fragile')">Fragile</button>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:1.5rem">
+        <label>🚚 Delivery Urgency</label>
+        <select id="urgency"><option value="express">Express (Same Day)</option><option value="standard">Standard (Next Day)</option><option value="economy">Economy (2-3 Days)</option></select>
+      </div>
+      <button class="find-btn" onclick="startSearch()">🤖 Find Best Route &amp; Pricing</button>
+    </div>
+  </section>
+
+  <section class="section-pad results-section" id="results">
+    <div class="results-header">
+      <div><div class="section-label">AI Analysis Complete</div><h2 class="section-title" style="margin-bottom:0">BEST MATCHES FOUND</h2></div>
+      <div class="ai-badge">🧠 AI Powered</div>
+    </div>
+    <div class="results-grid" id="resultsGrid"></div>
+    <div class="map-preview"><canvas class="map-canvas" id="mapCanvas"></canvas><div class="map-label">🗺️ Optimized Route Preview — Live Tracking Enabled</div></div>
+  </section>
+
+  <footer><div class="f-logo">LAG<span>YO</span></div><p style="margin-top:.5rem">AI-Powered Courier Platform · © 2025 Lagyo Technologies</p></footer>
+</div>
+
+<!-- ═══════ TRAVELLER PAGE ═══════ -->
+<div class="page" id="travellerPage">
+  <section class="traveller-hero">
+    <div class="traveller-hero-bg"></div><div class="hero-grid"></div>
+    <div class="traveller-split">
+      <!-- LEFT: PITCH -->
+      <div>
+        <div class="hero-badge">🚗 Earn While You Travel</div>
+        <h1 style="font-family:'Bebas Neue',cursive;font-size:clamp(2.8rem,6vw,5.5rem);line-height:.95;letter-spacing:2px;margin-bottom:1.1rem;">TURN YOUR<br><em style="color:var(--red);font-style:normal">JOURNEY</em><br>INTO INCOME</h1>
+        <p style="color:var(--muted);font-size:1rem;line-height:1.7;max-width:420px;margin-bottom:.3rem;">Already heading somewhere? Carry a package, earn extra cash. Lagyo verifies, matches, and pays — all in one platform.</p>
+        <div class="traveller-perks">
+          <div class="perk"><div class="perk-icon">💰</div><div><h4>Earn Rs 400–2,000 per trip</h4><p>AI-suggested fair pricing based on distance, package size, and real-time market demand.</p></div></div>
+          <div class="perk"><div class="perk-icon">🛡️</div><div><h4>Fully Verified & Insured</h4><p>Your identity is verified. Packages are insured. You're protected every step of the way.</p></div></div>
+          <div class="perk"><div class="perk-icon">📱</div><div><h4>Set Your Own Route & Price</h4><p>You decide when you travel, what you carry, and how much you charge. Full flexibility.</p></div></div>
+        </div>
+        <button class="btn-primary" style="margin-top:1.8rem" onclick="showDashboard()">👁 Preview Traveller Dashboard</button>
+      </div>
+
+      <!-- RIGHT: WIZARD -->
+      <div id="wizardContainer">
+        <div class="wizard-wrap" id="wizardWrap">
+          <div class="wizard-progress">
+            <div class="progress-steps">
+              <div class="prog-step active" id="ps1"><div class="prog-dot active" id="pd1">1</div><span class="prog-label">Info</span></div>
+              <div class="prog-step" id="ps2"><div class="prog-dot" id="pd2">2</div><span class="prog-label">Docs</span></div>
+              <div class="prog-step" id="ps3"><div class="prog-dot" id="pd3">3</div><span class="prog-label">Route</span></div>
+              <div class="prog-step" id="ps4"><div class="prog-dot" id="pd4">4</div><span class="prog-label">Pricing</span></div>
+              <div class="prog-step" id="ps5"><div class="prog-dot" id="pd5">5</div><span class="prog-label">Submit</span></div>
+            </div>
+          </div>
+          <div class="wizard-body">
+
+            <!-- STEP 1 -->
+            <div class="wiz-step active" id="ws1">
+              <h3>Personal Info</h3>
+              <p class="wiz-sub">Your details will appear on your verified traveller profile visible to senders.</p>
+              <div class="form-grid">
+                <div class="form-group"><label>Full Name</label><input type="text" id="t_name" placeholder="Rajesh Sharma"/></div>
+                <div class="form-group"><label>Phone</label><input type="text" id="t_phone" placeholder="+977 98XXXXXXXX"/></div>
+                <div class="form-group"><label>Email</label><input type="email" id="t_email" placeholder="you@example.com"/></div>
+                <div class="form-group"><label>Date of Birth</label><input type="date" id="t_dob"/></div>
+                <div class="form-group"><label>Gender</label><select id="t_gender"><option value="">Select</option><option>Male</option><option>Female</option><option>Prefer not to say</option></select></div>
+                <div class="form-group"><label>City / District</label><input type="text" id="t_city" placeholder="e.g. Kathmandu"/></div>
+              </div>
+              <div class="form-group">
+                <label>Vehicle Type</label>
+                <select id="t_vehicle"><option value="none">Walking / Public Transport</option><option>Motorcycle</option><option>Car / SUV</option><option>Truck / Van</option><option>Bus / Microbus</option></select>
+              </div>
+              <div class="wiz-nav"><div></div><button class="wiz-next" onclick="wizNext(1)">Continue →</button></div>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="wiz-step" id="ws2">
+              <h3>Document Verification</h3>
+              <p class="wiz-sub">We verify every traveller for platform safety. Upload clearly scanned or photographed documents.</p>
+              <div class="doc-grid">
+                <div class="doc-upload" id="du_citizen">
+                  <input type="file" accept="image/*,.pdf" onchange="handleDoc(event,'du_citizen','ds_citizen','Citizenship Card')"/>
+                  <div class="doc-icon">🪪</div>
+                  <div class="doc-name">Citizenship Card</div>
+                  <div class="doc-hint">Front & back required</div>
+                  <div class="doc-status" id="ds_citizen">Click to upload</div>
+                </div>
+                <div class="doc-upload" id="du_license">
+                  <input type="file" accept="image/*,.pdf" onchange="handleDoc(event,'du_license','ds_license','Driving License')"/>
+                  <div class="doc-icon">🚗</div>
+                  <div class="doc-name">Driving License</div>
+                  <div class="doc-hint">Optional if no vehicle</div>
+                  <div class="doc-status" id="ds_license">Click to upload</div>
+                </div>
+                <div class="doc-upload" id="du_selfie">
+                  <input type="file" accept="image/*" onchange="handleDoc(event,'du_selfie','ds_selfie','Selfie with ID')"/>
+                  <div class="doc-icon">🤳</div>
+                  <div class="doc-name">Selfie with ID</div>
+                  <div class="doc-hint">Hold citizenship next to face</div>
+                  <div class="doc-status" id="ds_selfie">Click to upload</div>
+                </div>
+                <div class="doc-upload" id="du_bank">
+                  <input type="file" accept="image/*,.pdf" onchange="handleDoc(event,'du_bank','ds_bank','Bank Details')"/>
+                  <div class="doc-icon">🏦</div>
+                  <div class="doc-name">Bank / eSewa Details</div>
+                  <div class="doc-hint">For receiving payments</div>
+                  <div class="doc-status" id="ds_bank">Click to upload</div>
+                </div>
+              </div>
+              <div style="background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:.9rem 1.1rem;font-size:.8rem;color:var(--amber);">
+                🔒 Documents are encrypted and used only for identity verification. Never shared publicly.
+              </div>
+              <div class="wiz-nav">
+                <button class="wiz-back" onclick="wizBack(2)">← Back</button>
+                <button class="wiz-next" onclick="wizNext(2)">Continue →</button>
+              </div>
+            </div>
+
+            <!-- STEP 3 -->
+            <div class="wiz-step" id="ws3">
+              <h3>Your Route</h3>
+              <p class="wiz-sub">Set your travel route and schedule. Senders with packages along your path will be matched to you.</p>
+              <div class="route-builder">
+                <h4>🗺️ Journey Details</h4>
+                <div class="route-row">
+                  <div class="form-group"><label>From (Origin)</label><input type="text" id="r_from" placeholder="e.g. Kathmandu"/></div>
+                  <div class="form-group"><label>To (Destination)</label><input type="text" id="r_to" placeholder="e.g. Pokhara"/></div>
+                </div>
+                <div class="route-row triple">
+                  <div class="form-group"><label>Departure Date</label><input type="date" id="r_date"/></div>
+                  <div class="form-group"><label>Departure Time</label><input type="time" id="r_time"/></div>
+                  <div class="form-group"><label>Return Date (opt.)</label><input type="date" id="r_return"/></div>
+                </div>
+              </div>
+              <div class="form-group" style="margin-bottom:1rem">
+                <label>Max Package Weight</label>
+                <select id="r_maxweight"><option value="3">Up to 3 kg</option><option value="7">Up to 7 kg</option><option value="15" selected>Up to 15 kg</option><option value="30">Up to 30 kg</option><option value="any">Any size</option></select>
+              </div>
+              <div class="form-group" style="margin-bottom:1rem">
+                <label>Package Types Accepted</label>
+                <div class="size-btns" id="pkgTypeWrap">
+                  <button class="size-btn active" onclick="this.classList.toggle('active')">Documents</button>
+                  <button class="size-btn active" onclick="this.classList.toggle('active')">Clothing</button>
+                  <button class="size-btn" onclick="this.classList.toggle('active')">Electronics</button>
+                  <button class="size-btn" onclick="this.classList.toggle('active')">Food</button>
+                </div>
+              </div>
+              <div class="toggle-wrap"><button class="toggle on" id="tog_repeat" onclick="this.classList.toggle('on')"></button><span class="toggle-label">I travel this route regularly</span></div>
+              <div class="toggle-wrap"><button class="toggle" id="tog_fragile" onclick="this.classList.toggle('on')"></button><span class="toggle-label">I accept fragile packages</span></div>
+              <div class="wiz-nav">
+                <button class="wiz-back" onclick="wizBack(3)">← Back</button>
+                <button class="wiz-next" onclick="wizNext(3)">Continue →</button>
+              </div>
+            </div>
+
+            <!-- STEP 4 -->
+            <div class="wiz-step" id="ws4">
+              <h3>Set Your Pricing</h3>
+              <p class="wiz-sub">Choose your delivery rates. Our AI suggests competitive prices based on your route and market demand.</p>
+              <div class="pricing-grid">
+                <div class="price-card">
+                  <label>Small Pkg (under 1kg)</label>
+                  <div class="price-input-wrap"><span class="currency">Rs</span><input type="number" id="p_small" placeholder="350" min="100"/></div>
+                  <button class="ai-suggest-price" onclick="aiSuggestPrice('p_small',300,480)">🧠 AI Suggest</button>
+                </div>
+                <div class="price-card">
+                  <label>Medium Pkg (1–5kg)</label>
+                  <div class="price-input-wrap"><span class="currency">Rs</span><input type="number" id="p_medium" placeholder="600" min="200"/></div>
+                  <button class="ai-suggest-price" onclick="aiSuggestPrice('p_medium',520,750)">🧠 AI Suggest</button>
+                </div>
+                <div class="price-card">
+                  <label>Large Pkg (5–15kg)</label>
+                  <div class="price-input-wrap"><span class="currency">Rs</span><input type="number" id="p_large" placeholder="950" min="400"/></div>
+                  <button class="ai-suggest-price" onclick="aiSuggestPrice('p_large',820,1100)">🧠 AI Suggest</button>
+                </div>
+                <div class="price-card">
+                  <label>Fragile / Special</label>
+                  <div class="price-input-wrap"><span class="currency">Rs</span><input type="number" id="p_fragile" placeholder="1200" min="500"/></div>
+                  <button class="ai-suggest-price" onclick="aiSuggestPrice('p_fragile',1050,1500)">🧠 AI Suggest</button>
+                </div>
+              </div>
+              <div style="background:rgba(220,20,60,.07);border:1px solid var(--border);border-radius:10px;padding:.9rem 1.1rem;font-size:.82rem;color:var(--muted);margin-bottom:1rem;">
+                🧠 <strong style="color:var(--text)">AI Insight:</strong> Travellers on Kathmandu–Pokhara currently earn avg <strong style="color:var(--red)">Rs 720</strong> per medium package. Click "AI Suggest" for your personalized rates.
+              </div>
+              <div class="form-group">
+                <label>Preferred Payment Method</label>
+                <select><option>eSewa</option><option>Khalti</option><option>Bank Transfer</option><option>Cash on Delivery</option></select>
+              </div>
+              <div class="wiz-nav">
+                <button class="wiz-back" onclick="wizBack(4)">← Back</button>
+                <button class="wiz-next" onclick="wizNext(4)">Continue →</button>
+              </div>
+            </div>
+
+            <!-- STEP 5: REVIEW -->
+            <div class="wiz-step" id="ws5">
+              <h3>Review & Submit</h3>
+              <p class="wiz-sub">Confirm your details. Verification typically takes 1–2 hours after submission.</p>
+              <div id="reviewContent" style="display:flex;flex-direction:column;gap:.7rem;margin-bottom:1.3rem;"></div>
+              <div style="background:rgba(220,20,60,.07);border:1px solid var(--border);border-radius:10px;padding:.9rem 1.1rem;font-size:.8rem;color:var(--muted);margin-bottom:1rem;">
+                By submitting you agree to Lagyo's <strong style="color:var(--red)">Traveller Terms</strong> and confirm all documents are genuine. Providing false documents is a criminal offense.
+              </div>
+              <div class="toggle-wrap">
+                <button class="toggle" id="tog_agree" onclick="this.classList.toggle('on')"></button>
+                <span class="toggle-label" style="font-size:.83rem">I agree to terms and confirm documents are authentic</span>
+              </div>
+              <div class="wiz-nav">
+                <button class="wiz-back" onclick="wizBack(5)">← Back</button>
+                <button class="wiz-next" onclick="submitRegistration()" style="background:var(--green);">✓ Submit Application</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- VERIFICATION PENDING -->
+        <div class="wizard-wrap" id="verifyPending" style="display:none;">
+          <div class="wizard-body">
+            <div class="verification-pending">
+              <div class="verify-icon">🎉</div>
+              <h3 style="font-family:'Bebas Neue',cursive;font-size:1.9rem;letter-spacing:2px;margin-bottom:.4rem;">Application Submitted!</h3>
+              <p style="color:var(--muted);font-size:.88rem;max-width:340px;margin:0 auto 0;">Our team is reviewing your documents. You'll be notified within 1–2 hours.</p>
+              <div class="verify-steps">
+                <div class="verify-step">🪪 Citizenship Card <span class="vstatus done">✓ Received</span></div>
+                <div class="verify-step">🤳 Selfie Verification <span class="vstatus pending">⏳ In Progress</span></div>
+                <div class="verify-step">🏦 Payment Setup <span class="vstatus waiting">— Pending</span></div>
+                <div class="verify-step">✅ Account Activation <span class="vstatus waiting">— Pending</span></div>
+              </div>
+              <button class="btn-primary" style="margin:0 auto" onclick="showDashboard()">👁 Preview Dashboard →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer><div class="f-logo">LAG<span>YO</span></div><p style="margin-top:.5rem">AI-Powered Courier Platform · © 2025 Lagyo Technologies</p></footer>
+</div>
+
+<!-- ═══════ TRAVELLER DASHBOARD ═══════ -->
+<div class="dashboard" id="dashboardPage">
+  <div class="dash-header">
+    <div class="dash-user">
+      <div class="dash-avatar">RS</div>
+      <div class="dash-info">
+        <h2>RAJESH SHARMA</h2>
+        <p>Kathmandu · Motorcycle · <span class="verified-tag">✓ Verified</span></p>
+      </div>
+    </div>
+    <div style="display:flex;gap:.8rem;align-items:center;flex-wrap:wrap;">
+      <div class="status-tag active">● Active</div>
+      <button class="nav-btn outline" onclick="showTravellerPage()">← Profile</button>
+      <button class="nav-btn solid" onclick="showSenderPage()">Switch to Sender</button>
+    </div>
+  </div>
+
+  <div class="dash-stats">
+    <div class="dash-stat"><div class="dash-stat-num">47</div><div class="dash-stat-label">Total Deliveries</div></div>
+    <div class="dash-stat"><div class="dash-stat-num">Rs 31,200</div><div class="dash-stat-label">Total Earned</div></div>
+    <div class="dash-stat"><div class="dash-stat-num">4.9★</div><div class="dash-stat-label">Rating</div></div>
+    <div class="dash-stat"><div class="dash-stat-num">3</div><div class="dash-stat-label">Active Requests</div></div>
+    <div class="dash-stat"><div class="dash-stat-num">Rs 18,400</div><div class="dash-stat-label">This Month</div></div>
+  </div>
+
+  <div class="dash-grid">
+    <div>
+      <div class="dash-card" style="margin-bottom:1.5rem">
+        <div class="dash-card-title">🗺️ Your Active Routes <button class="edit-btn" onclick="showTravellerPage()">+ Add Route</button></div>
+        <div class="route-display">
+          <div class="from-to"><strong>Kathmandu (Thamel)</strong><span class="route-arrow">→</span><strong>Pokhara (Lakeside)</strong><span class="route-price-tag">Rs 650–1100</span></div>
+          <div class="route-date">📅 Every Sat & Sun · 7:00 AM · <span class="status-tag active">● Active</span></div>
+        </div>
+        <div class="route-display">
+          <div class="from-to"><strong>Kathmandu</strong><span class="route-arrow">→</span><strong>Chitwan (Narayanghat)</strong><span class="route-price-tag">Rs 500–900</span></div>
+          <div class="route-date">📅 March 15, 2025 · 6:30 AM · <span class="status-tag pending">⏳ Upcoming</span></div>
+        </div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-title">📊 Earnings Overview <span style="color:var(--green);font-size:.8rem;font-weight:700">↑ 18% vs last month</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;">
+          <div style="background:var(--dark);border:1px solid var(--border);border-radius:10px;padding:1.1rem;text-align:center;"><div style="font-family:'Bebas Neue',cursive;font-size:1.6rem;color:var(--red)">Rs 6,800</div><div style="font-size:.72rem;color:var(--muted)">This Week</div></div>
+          <div style="background:var(--dark);border:1px solid var(--border);border-radius:10px;padding:1.1rem;text-align:center;"><div style="font-family:'Bebas Neue',cursive;font-size:1.6rem;color:var(--red)">Rs 18,400</div><div style="font-size:.72rem;color:var(--muted)">This Month</div></div>
+          <div style="background:var(--dark);border:1px solid var(--border);border-radius:10px;padding:1.1rem;text-align:center;"><div style="font-family:'Bebas Neue',cursive;font-size:1.6rem;color:var(--green)">✓ 11</div><div style="font-size:.72rem;color:var(--muted)">Completed</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="dash-card">
+        <div class="dash-card-title">📦 Incoming Requests</div>
+        <div class="incoming-list">
+          <div class="incoming-item"><div class="pkg-icon">📄</div><div class="incoming-info"><h5>Documents — 0.5 kg</h5><p>Thamel → Lakeside, Pokhara</p></div><div class="incoming-price">Rs 420</div><button class="accept-btn" onclick="acceptJob(this,'Documents')">Accept</button></div>
+          <div class="incoming-item"><div class="pkg-icon">👗</div><div class="incoming-info"><h5>Clothing — 2 kg</h5><p>New Baneshwor → Pokhara Bus Park</p></div><div class="incoming-price">Rs 650</div><button class="accept-btn" onclick="acceptJob(this,'Clothing')">Accept</button></div>
+          <div class="incoming-item"><div class="pkg-icon">📱</div><div class="incoming-info"><h5>Electronics — 1.5 kg</h5><p>Thamel → Fewa Taal, Pokhara</p></div><div class="incoming-price">Rs 780</div><button class="accept-btn" onclick="acceptJob(this,'Electronics')">Accept</button></div>
+          <div class="incoming-item"><div class="pkg-icon">📦</div><div class="incoming-info"><h5>General — 3 kg</h5><p>Chabahil → Pokhara Prithvi Chowk</p></div><div class="incoming-price">Rs 590</div><button class="accept-btn" onclick="acceptJob(this,'Package')">Accept</button></div>
+          <div style="text-align:center;margin-top:.4rem"><button style="background:none;border:none;color:var(--red);font-size:.8rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;">View all 8 requests →</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer style="margin-top:3rem"><div class="f-logo">LAG<span>YO</span></div><p style="margin-top:.5rem">AI-Powered Courier Platform · © 2025 Lagyo Technologies</p></footer>
+</div>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-logo">LAG<span>YO</span></div>
+  <div class="loading-steps-list" id="loadingSteps">
+    <div class="loading-step" id="ls1">⬜ Analyzing pickup and destination...</div>
+    <div class="loading-step" id="ls2">⬜ Scanning available travellers...</div>
+    <div class="loading-step" id="ls3">⬜ Running AI route optimization...</div>
+    <div class="loading-step" id="ls4">⬜ Calculating competitive pricing...</div>
+    <div class="loading-step" id="ls5">⬜ Matching best options for you...</div>
+  </div>
+  <div class="loading-bar-wrap"><div class="loading-bar" id="loadingBar"></div></div>
+  <div class="loading-status" id="loadingStatus">Initializing AI engine...</div>
+</div>
+
+<!-- CHAT -->
+<button class="chat-fab" id="chatFab" onclick="toggleChat()">💬<div class="notif">1</div></button>
+<div class="chat-window" id="chatWindow">
+  <div class="chat-header">
+    <div class="chat-header-left"><div class="chat-ai-avatar">🤖</div><div class="chat-ai-info"><h4>Lagyo AI Assistant</h4><p><span class="online-dot"></span>Online — Always here to help</p></div></div>
+    <button class="chat-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="msg bot">👋 Hi! I'm Lagyo's AI. I can help with delivery pricing, route info, traveller registration, or anything else. What do you need?</div>
+  </div>
+  <div class="chat-suggestions" id="chatSuggestions">
+    <span class="sugg-chip" onclick="sendSuggestion(this)">💰 How much can I earn?</span>
+    <span class="sugg-chip" onclick="sendSuggestion(this)">📋 What docs do I need?</span>
+    <span class="sugg-chip" onclick="sendSuggestion(this)">📦 Send to Pokhara?</span>
+  </div>
+  <div class="chat-input-area">
+    <input class="chat-input" id="chatInput" placeholder="Ask me anything..." onkeydown="if(event.key==='Enter')sendChat()"/>
+    <button class="chat-send" onclick="sendChat()">➤</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// SCROLL REVEAL
+const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+// PAGE SWITCHING
+function showSenderPage(){
+  document.getElementById('senderPage').classList.add('active');
+  document.getElementById('travellerPage').classList.remove('active');
+  document.getElementById('dashboardPage').classList.remove('show');
+  document.getElementById('tabSender').classList.add('active');
+  document.getElementById('tabTraveller').classList.remove('active');
+  window.scrollTo(0,0);
+}
+function showTravellerPage(){
+  document.getElementById('senderPage').classList.remove('active');
+  document.getElementById('travellerPage').classList.add('active');
+  document.getElementById('dashboardPage').classList.remove('show');
+  document.getElementById('tabTraveller').classList.add('active');
+  document.getElementById('tabSender').classList.remove('active');
+  window.scrollTo(0,0);
+}
+function showDashboard(){
+  document.getElementById('senderPage').classList.remove('active');
+  document.getElementById('travellerPage').classList.remove('active');
+  document.getElementById('dashboardPage').classList.add('show');
+  document.getElementById('tabTraveller').classList.add('active');
+  document.getElementById('tabSender').classList.remove('active');
+  window.scrollTo(0,0);
+}
+
+// WIZARD
+function wizGoTo(step){
+  for(let i=1;i<=5;i++){
+    const ws=document.getElementById('ws'+i);
+    const pd=document.getElementById('pd'+i);
+    const ps=document.getElementById('ps'+i);
+    if(ws)ws.classList.toggle('active',i===step);
+    if(pd){pd.classList.remove('active','done');if(i===step)pd.classList.add('active');else if(i<step)pd.classList.add('done');}
+    if(ps)ps.classList.toggle('active',i===step);
+  }
+}
+function wizNext(from){
+  if(from===1){
+    const n=document.getElementById('t_name').value.trim();
+    const p=document.getElementById('t_phone').value.trim();
+    if(!n||!p){showToast('⚠️ Please fill in your name and phone number.');return;}
+  }
+  if(from===3){
+    const f=document.getElementById('r_from').value.trim();
+    const t=document.getElementById('r_to').value.trim();
+    if(!f||!t){showToast('⚠️ Please enter your route (from and to).');return;}
+  }
+  if(from===4){buildReview();}
+  wizGoTo(from+1);
+}
+function wizBack(from){wizGoTo(from-1);}
+
+function buildReview(){
+  const name=document.getElementById('t_name').value||'—';
+  const phone=document.getElementById('t_phone').value||'—';
+  const city=document.getElementById('t_city').value||'—';
+  const vehicle=document.getElementById('t_vehicle').value||'—';
+  const from=document.getElementById('r_from').value||'—';
+  const to=document.getElementById('r_to').value||'—';
+  const date=document.getElementById('r_date').value||'—';
+  const pSmall=document.getElementById('p_small').value||'350';
+  const pMed=document.getElementById('p_medium').value||'600';
+  const rows=[['👤 Full Name',name],['📞 Phone',phone],['🏙️ City',city],['🚗 Vehicle',vehicle],['🗺️ Route',`${from} → ${to}`],['📅 Departure',date],['💰 Small Pkg',`Rs ${pSmall}`],['💰 Medium Pkg',`Rs ${pMed}`],['📄 Documents','4 files submitted']];
+  document.getElementById('reviewContent').innerHTML=rows.map(([k,v])=>`
+    <div style="display:flex;align-items:center;gap:1rem;background:var(--dark);border:1px solid var(--border);border-radius:9px;padding:.8rem 1.1rem;">
+      <span style="font-size:.8rem;color:var(--muted);min-width:140px">${k}</span>
+      <span style="font-weight:700;font-size:.9rem">${v}</span>
+    </div>`).join('');
+}
+function submitRegistration(){
+  if(!document.getElementById('tog_agree').classList.contains('on')){showToast('⚠️ Please agree to the terms first.');return;}
+  document.getElementById('wizardWrap').style.display='none';
+  document.getElementById('verifyPending').style.display='block';
+  showToast('✅ Application submitted successfully!');
+}
+
+// DOC UPLOAD
+function handleDoc(e,uploadId,statusId,name){
+  if(e.target.files&&e.target.files[0]){
+    document.getElementById(uploadId).classList.add('uploaded');
+    document.getElementById(statusId).textContent='✓ Uploaded';
+    showToast(`✅ ${name} uploaded!`);
+  }
+}
+
+// SENDER FORM
+let selectedSize='small';
+function selectSize(btn,size){document.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');selectedSize=size;}
+
+// AI PRICE SUGGEST
+function aiSuggestPrice(id,min,max){
+  const el=document.getElementById(id);
+  const v=Math.floor(Math.random()*(max-min)+min);
+  el.value=v;el.style.color='var(--red)';
+  setTimeout(()=>{el.style.color='';},1500);
+  showToast(`🧠 AI suggested Rs ${v} for your route`);
+}
+
+// SEARCH
+function startSearch(){
+  const pickup=document.getElementById('pickup').value.trim();
+  const destination=document.getElementById('destination').value.trim();
+  if(!pickup||!destination){showToast('⚠️ Please enter pickup and destination.');return;}
+  const overlay=document.getElementById('loadingOverlay');
+  overlay.classList.add('show');
+  const steps=['ls1','ls2','ls3','ls4','ls5'];
+  const msgs=['Analyzing locations...','Scanning 12,847 travellers...','Route optimizer running...','Pricing analysis...','Finalizing top matches...'];
+  document.getElementById('loadingBar').style.width='0';
+  steps.forEach(id=>{const el=document.getElementById(id);el.className='loading-step';el.textContent=el.textContent.replace('✅','⬜').replace('⚡','⬜');});
+  let i=0;
+  (function nextStep(){
+    if(i>0){const p=document.getElementById(steps[i-1]);p.classList.remove('active');p.classList.add('done');p.textContent='✅ '+p.textContent.replace('⬜ ','');}
+    if(i<steps.length){
+      document.getElementById(steps[i]).classList.add('active');
+      document.getElementById(steps[i]).textContent='⚡ '+document.getElementById(steps[i]).textContent.replace('⬜ ','');
+      document.getElementById('loadingStatus').textContent=msgs[i];
+      document.getElementById('loadingBar').style.width=(((i+1)/steps.length)*100)+'%';
+      i++;setTimeout(nextStep,700+Math.random()*400);
+    }else{setTimeout(()=>{overlay.classList.remove('show');showResults(pickup,destination);},500);}
+  })();
+}
+function showResults(pickup,destination){
+  const urgency=document.getElementById('urgency').value;
+  const base=urgency==='express'?850:urgency==='standard'?550:380;
+  const travelers=[
+    {name:'Rajesh Sharma',initials:'RS',stars:'★★★★★',rating:'5.0',trips:'347 deliveries',time:urgency==='express'?'2h 15m':'4h 30m',price:'Rs '+(base+Math.floor(Math.random()*100)),departs:'Departs: 11:30 AM',recommended:true},
+    {name:'Sunita Gurung',initials:'SG',stars:'★★★★★',rating:'4.9',trips:'218 deliveries',time:urgency==='express'?'2h 45m':'5h 00m',price:'Rs '+(base-50+Math.floor(Math.random()*80)),departs:'Departs: 12:00 PM',recommended:false},
+    {name:'Bikash Thapa',initials:'BT',stars:'★★★★☆',rating:'4.7',trips:'95 deliveries',time:urgency==='express'?'3h 00m':'5h 30m',price:'Rs '+(base-120+Math.floor(Math.random()*60)),departs:'Departs: 1:00 PM',recommended:false},
+  ];
+  document.getElementById('resultsGrid').innerHTML=travelers.map(t=>`
+    <div class="result-card${t.recommended?' recommended':''}">
+      ${t.recommended?'<div class="rec-badge">⭐ Best Match</div>':''}
+      <div class="result-traveler"><div class="avatar">${t.initials}</div><div class="traveler-info"><h4>${t.name}</h4><div class="stars">${t.stars} <span style="color:var(--muted)">${t.rating}</span></div><div class="trips">${t.trips}</div></div></div>
+      <div class="result-route">${pickup} → ${destination}</div>
+      <div class="result-meta">
+        <div class="meta-item"><span class="meta-label">AI Price</span><span class="meta-value price">${t.price}</span></div>
+        <div class="meta-item"><span class="meta-label">ETA</span><span class="meta-value">${t.time}</span></div>
+        <div class="meta-item"><span class="meta-label">Departs</span><span class="meta-value" style="font-size:.88rem">${t.departs}</span></div>
+      </div>
+      <button class="select-btn" onclick="selectTraveler('${t.name}','${t.price}')">Select ${t.name.split(' ')[0]} →</button>
+    </div>`).join('');
+  const r=document.getElementById('results');r.classList.add('show');r.scrollIntoView({behavior:'smooth'});
+  drawMap(pickup,destination);
+}
+function selectTraveler(name,price){
+  document.getElementById('chatWindow').classList.add('open');
+  document.querySelector('.notif').style.display='none';
+  addBotMsg(`🎉 Great choice! You've matched with <strong>${name}</strong> for ${price}.\n\nCoordinate pickup details below. Want me to draft an intro message for you?`);
+}
+
+// DASHBOARD
+function acceptJob(btn,type){btn.textContent='✓ Accepted';btn.style.background='var(--green)';btn.disabled=true;showToast(`✅ ${type} package accepted! Sender notified.`);}
+
+// MAP
+function drawMap(pickup,dest){
+  const canvas=document.getElementById('mapCanvas');if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight;
+  const W=canvas.width,H=canvas.height;
+  const pts=[{x:W*.1,y:H*.78},{x:W*.25,y:H*.58},{x:W*.42,y:H*.4},{x:W*.6,y:H*.48},{x:W*.76,y:H*.3},{x:W*.9,y:H*.22}];
+  let t=0,raf;
+  cancelAnimationFrame(raf);
+  (function draw(){
+    raf=requestAnimationFrame(draw);t=(t+.005)%1;
+    const idx=Math.floor(t*(pts.length-1)),frac=(t*(pts.length-1))%1;
+    const a=pts[Math.min(idx,pts.length-2)],b=pts[Math.min(idx+1,pts.length-1)];
+    const x=a.x+(b.x-a.x)*frac,y=a.y+(b.y-a.y)*frac;
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='#111114';ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle='rgba(220,20,60,.06)';ctx.lineWidth=1;
+    for(let gx=0;gx<W;gx+=40){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,H);ctx.stroke();}
+    for(let gy=0;gy<H;gy+=40){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke();}
+    ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);pts.slice(1).forEach(p=>ctx.lineTo(p.x,p.y));
+    ctx.strokeStyle='rgba(220,20,60,.15)';ctx.lineWidth=8;ctx.stroke();
+    ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);pts.slice(1).forEach(p=>ctx.lineTo(p.x,p.y));
+    ctx.strokeStyle='#DC143C';ctx.lineWidth=3;ctx.setLineDash([8,4]);ctx.stroke();ctx.setLineDash([]);
+    pts.forEach((p,i)=>{if(i>0&&i<pts.length-1){ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);ctx.fillStyle='rgba(220,20,60,.4)';ctx.fill();}});
+    [pts[0],pts[pts.length-1]].forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,12,0,Math.PI*2);ctx.fillStyle='rgba(220,20,60,.2)';ctx.fill();ctx.beginPath();ctx.arc(p.x,p.y,6,0,Math.PI*2);ctx.fillStyle='#DC143C';ctx.fill();});
+    ctx.font='bold 12px Outfit,sans-serif';ctx.fillStyle='#F0EEF0';
+    const pu=document.getElementById('pickup');const de=document.getElementById('destination');
+    if(pu)ctx.fillText(pu.value.substring(0,16),pts[0].x-20,pts[0].y+26);
+    if(de)ctx.fillText(de.value.substring(0,16),pts[pts.length-1].x-20,pts[pts.length-1].y+26);
+    ctx.beginPath();ctx.arc(x,y,10,0,Math.PI*2);ctx.fillStyle='rgba(220,20,60,.3)';ctx.fill();
+    ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fillStyle='#FF1A47';ctx.fill();
+    ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.strokeStyle='rgba(255,255,255,.6)';ctx.lineWidth=1.5;ctx.stroke();
+  })();
+}
+
+// TOAST
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200);}
+
+// CHAT
+const CHAT_CTX=`You are Lagyo AI Assistant — helpful guide for Lagyo, Nepal's AI-powered courier platform. Key facts: Lagyo connects senders with verified travellers for same-day/next-day delivery. Travellers earn Rs 400–2000/trip. Senders pay Rs 350–1500 depending on size/distance/urgency. Traveller verification requires: citizenship card, driving license (if vehicle), selfie with ID, bank/eSewa details. Verification takes 1-2 hours. 5 steps for senders: select pickup/destination, AI pricing, AI traveller match, chat, delivery. Traveller signup: personal info → documents → route setup → pricing → submit. Be friendly, concise, use Nepal cities naturally. Keep responses 2-5 sentences unless more is genuinely needed.`;
+let chatHist=[];
+function toggleChat(){document.getElementById('chatWindow').classList.toggle('open');document.querySelector('.notif').style.display='none';}
+function openChat(){document.getElementById('chatWindow').classList.add('open');document.querySelector('.notif').style.display='none';}
+function sendSuggestion(el){document.getElementById('chatInput').value=el.textContent;document.getElementById('chatSuggestions').style.display='none';sendChat();}
+async function sendChat(){
+  const inp=document.getElementById('chatInput');const msg=inp.value.trim();if(!msg)return;
+  inp.value='';
+  const msgs=document.getElementById('chatMessages');
+  msgs.innerHTML+=`<div class="msg user">${msg}</div>`;
+  const tid='t'+Date.now();
+  msgs.innerHTML+=`<div class="msg bot typing" id="${tid}"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+  msgs.scrollTop=msgs.scrollHeight;chatHist.push({role:'user',content:msg});
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:CHAT_CTX,messages:chatHist})});
+    const data=await res.json();
+    const reply=data.content?.[0]?.text||"I'm having trouble connecting. Please try again!";
+    chatHist.push({role:'assistant',content:reply});
+    document.getElementById(tid)?.remove();
+    msgs.innerHTML+=`<div class="msg bot">${reply.replace(/\n/g,'<br>')}</div>`;
+  }catch(e){
+    document.getElementById(tid)?.remove();
+    msgs.innerHTML+=`<div class="msg bot">⚠️ Connection issue. Check your internet and try again.</div>`;
+  }
+  msgs.scrollTop=msgs.scrollHeight;
+}
+function addBotMsg(text){const m=document.getElementById('chatMessages');m.innerHTML+=`<div class="msg bot">${text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>`;m.scrollTop=m.scrollHeight;}
+</script>
+</body>
+</html>
